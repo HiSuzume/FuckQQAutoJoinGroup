@@ -23,9 +23,7 @@ const qqint = parseInt(process.argv[2])
 
 const password = process.argv[3]
 
-log("发送 开启/关闭自动退群 来控制脚本。")
-
-//他人、自己入群事件
+//log("发送 开启/关闭自动退群 来控制脚本。")
 
 /*client.on("message", e => {
     if (e.sender.user_id == e.sender.self_id) {
@@ -42,11 +40,15 @@ log("发送 开启/关闭自动退群 来控制脚本。")
     }
 })*/
 
+//他人、自己入群事件
 client.on("notice.group.increase", e => {
     if (e.user_id == e.self_id && not_allow_auto_join_group) {
         log("将准备退出群聊： " + e.group_id)
-        client.pickGroup(e.group_id)
-            .quit()
+        client.sendGroupMsg(e.group_id, "[自动退群]未经批准被自动拉入群聊，自动退出。")
+            .then(() => {
+            client.pickGroup(e.group_id)
+                .quit()
+        })
     }
 })
 
